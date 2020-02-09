@@ -13,7 +13,7 @@ $(function () {
         i = playPauseButton.find('i'),
         tProgress = $('#current-time'),
         tTime = $('#track-length'),
-        seekT, seekLoc, seekBarPos, cM, ctMinutes, ctSeconds, curMinutes, curSeconds, durMinutes, durSeconds, playProgress, bTime, nTime = 0,
+        seekT, seekLoc, seekBarPos, cM, ctMinutes, ctSeconds, curMinutes, curSeconds, durMinutes, durSeconds, playProgress, bTime, nTime,
         buffInterval = null,
         tFlag = false,
         albums = ['Dawn', 'Me & You', 'Electro Boy', 'Home', 'Proxy (Original Mix)'],
@@ -22,7 +22,8 @@ $(function () {
         trackUrl = ['images/2.mp3', 'images/1.mp3', 'images/3.mp3', 'images/4.mp3', 'images/5.mp3'],
         playPreviousTrackButton = $('#play-previous'),
         playNextTrackButton = $('#play-next'),
-        currIndex = -1;
+        currIndex = -1,
+        musicSound = $('#musicSound input');
 
     function playPause() {
         setTimeout(function () {
@@ -144,6 +145,7 @@ $(function () {
             tProgress.text('00:00');
             albumArt.removeClass('buffering').removeClass('active');
             clearInterval(buffInterval);
+            selectTrack2(1);
         }
     }
 
@@ -215,6 +217,10 @@ $(function () {
             }
         });
     }
+    function changeSound() {
+        var sound = $(musicSound).val();
+        audio.volume = sound/100;
+    }
     function initPlayer() {
         audio = new Audio();
 
@@ -240,7 +246,14 @@ $(function () {
         playNextTrackButton.on('click', function () {
             selectTrack2(1);
         });
-    }
 
+        musicSound.on('change', function() {
+            changeSound();
+        })
+        /*audio.onended = function() {
+            selectTrack2(1);
+        }*/
+        changeSound();
+    }
     initPlayer();
 });
