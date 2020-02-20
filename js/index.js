@@ -24,6 +24,7 @@ $(function () {
         playNextTrackButton = $('#play-next'),
         currIndex = -1,
         musicSound = $('#musicSound input');
+        musicVolumn = $('#musicVolumn .aplayer-volume-wrap');
 
     function playPause() {
         setTimeout(function () {
@@ -217,9 +218,25 @@ $(function () {
             }
         });
     }
-    function changeSound() {
-        var sound = $(musicSound).val();
-        audio.volume = sound/100;
+    function changeSound(e, offFlag) {
+        let height = Number($('#musicVolumn .aplayer-volume-bar').css('height').replace('px',''));
+        let top = $('.aplayer-volume-bar').offset().top;
+        let click = top + height*0.6;
+        if (e) {
+            click = e.clientY;
+        }
+        if (offFlag) {
+            if ($('#musicVolumn i').hasClass('fa-volume-up')) {
+                click = height - Number($('#musicVolumn .aplayer-volume').attr('t').replace('px','')) + top;
+            } else {
+                $('#musicVolumn .aplayer-volume').attr('t', $('#musicVolumn .aplayer-volume').css('height'))
+                click = top + height;
+            }
+        }
+
+        let percent = (top+height-click)/height;
+        $('#musicVolumn .aplayer-volume').css('height', percent*100+'%');
+        audio.volume = percent;
     }
     function initPlayer() {
         audio = new Audio();
@@ -247,8 +264,29 @@ $(function () {
             selectTrack2(1);
         });
 
-        musicSound.on('change', function() {
-            changeSound();
+        musicVolumn.on('mousemove', function() {
+            $('#musicVolumn i').css('color', '#1f1f1f');
+            $('#musicVolumn .aplayer-volume-bar-wrap').show()
+        });
+        musicVolumn.on('mouseout', function() {
+            $('#musicVolumn i').css('color', '#9fa1a3');
+            $('#musicVolumn .aplayer-volume-bar-wrap').hide()
+        });
+        $('#musicVolumn i').on('click', function() {
+            if ($('#musicVolumn i').hasClass('fa-volume-up')) {
+                $('#musicVolumn i').removeClass('fa-volume-up')
+                $('#musicVolumn i').addClass('fa-volume-off')
+                changeSound(null, true);
+            } else {
+                $('#musicVolumn i').removeClass('fa-volume-off')
+                $('#musicVolumn i').addClass('fa-volume-up')
+                changeSound(null, true);
+            }
+            
+        });
+
+        $('#musicVolumn .aplayer-volume-bar-wrap').on('click', function(e) {
+            changeSound(e);
         })
         /*audio.onended = function() {
             selectTrack2(1);
