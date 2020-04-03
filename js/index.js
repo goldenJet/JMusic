@@ -223,7 +223,7 @@ $(function () {
     }
     function getLrc(url) {
         let id = url.split("id=")[1].split(".")[0];
-        let lrcUrl = 'http://music.163.com/api/song/lyric?os=pc&lv=-1&kv=-1&tv=-1&id=' + id;
+        let lrcUrl = 'http://jmusic.jetchen.cn/api/song/lyric?os=pc&lv=-1&kv=-1&tv=-1&id=' + id;
         $.ajax({
             url: lrcUrl,
             type: 'get',
