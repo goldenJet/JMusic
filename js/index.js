@@ -362,7 +362,7 @@ function calLineno(currentTime) {
     $.each(medisArray, function (i, item) {
         if (t < parseFloat(item.t)) {
             lineno = i-1;
-            return;
+            return false;
         }
     });
 }
