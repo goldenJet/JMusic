@@ -10,12 +10,38 @@ body {
 
 #dowebok {
     position: absolute;
-    top: 50%;
+    top: 30%;
     right: 0;
     left: 0;
     width: 430px;
     height: 100px;
     margin: -4px auto;
+}
+
+#lyric {
+    top: 40%;
+    position: absolute;
+    right: 0;
+    left: 0;
+    width: 800px;
+    height: 40%;
+    margin: -4px auto;
+    z-index: 10;
+    overflow: hidden;
+    line-height: 40px;
+    text-align: center;
+    font-size: 14px;
+    color: #fff;
+}
+
+#lyric p.played {
+    color: aquamarine;
+}
+
+#lyric p.active {
+    color: aquamarine;
+    font-size: 20px;
+    font-weight: 700;
 }
 
 #bg-artwork {
@@ -39,7 +65,7 @@ body {
     right: 0;
     bottom: 0;
     left: 0;
-    background-color: #fff;
+    background-color: #979595;
     opacity: 0.51;
     z-index: 2;
 }

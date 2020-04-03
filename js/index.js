@@ -215,8 +215,32 @@ $(function () {
                 bgArtwork.css({
                     'background-image': 'url(' + currArtwork + ')'
                 });
+
+                getLrc(json.data.url);
+
             }
         });
+    }
+    function getLrc(url) {
+        let id = url.split("id=")[1].split(".")[0];
+        let lrcUrl = 'http://music.163.com/api/song/lyric?os=pc&lv=-1&kv=-1&tv=-1&id=' + id;
+        $.ajax({
+            url: lrcUrl,
+            type: 'get',
+            dataType: 'jsonp',  // 请求方式为jsonp
+            crossDomain: true,
+            xhrFields: {
+                withCredentials: true    // 前端设置是否带cookie
+            },
+            success: function(data) {
+                if (data.code == 200) {
+                    console.log(data['lrc']['lyric'])
+                }
+            }
+        });
+    }
+    function handleCallback1(res) {
+        console.log(JSON.stringify(res))
     }
     function changeSound(e, offFlag) {
         let height = Number($('#musicVolumn .aplayer-volume-bar').css('height').replace('px',''));
