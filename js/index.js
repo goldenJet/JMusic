@@ -148,6 +148,10 @@ $(function () {
             clearInterval(buffInterval);
             selectTrack2(1);
         }
+
+        // 歌词高亮 update
+        calLineno(audio.currentTime);
+        lineHeight();
     }
 
     function checkBuffering() {
@@ -220,29 +224,6 @@ $(function () {
 
             }
         });
-    }
-    function getLrc(url) {
-        let id = url.split("id=")[1].split(".")[0];
-        let lrcUrl = 'http://jmusic.jetchen.cn/api/song/lyric?os=pc&lv=-1&kv=-1&tv=-1&id=' + id;
-        // $.ajax({
-        //     url: lrcUrl,
-        //     type: 'get',
-        //     dataType: 'jsonp',  // 请求方式为jsonp
-        //     crossDomain: true,
-        //     xhrFields: {
-        //         withCredentials: true    // 前端设置是否带cookie
-        //     },
-        //     success: function(data) {
-        //         if (data.code == 200) {
-        //             createLrc(data['lrc']['lyric']);
-        //         }
-        //     }
-        // });
-        $.getJSON(lrcUrl, function(json, textStatus) {
-            if (json.code == 200) {
-                createLrc(json['lrc']['lyric']);
-            }
-        })
     }
 
     function changeSound(e, offFlag) {
@@ -323,25 +304,66 @@ $(function () {
     initPlayer();
 });
 
-function createLrc (lyric) {
-        medisArray = new Array();
-        console.log(lyric)
-        var lyrics = lyric.split("\n");    // 用换行符拆分获取到的歌词
+function getLrc(url) {
+    let id = url.split("id=")[1].split(".")[0];
+    let lrcUrl = 'http://jmusic.jetchen.cn/api/song/lyric?os=pc&lv=-1&kv=-1&tv=-1&id=' + id;
+    $.getJSON(lrcUrl, function(json, textStatus) {
+        if (json.code == 200) {
+            createLrc(json['lrc']['lyric']);
+        }
+    })
+}
 
-        $.each(lyrics, function (i, item) {    // 遍历medises，并且将时间和文字拆分开，并push进自己定义的数组，形成一个对象数组
-            var t = item.substring(item.indexOf("[") + 1, item.indexOf("]"));
-            medisArray.push({
-              t: (t.split(":")[0] * 60 + parseFloat(t.split(":")[1])).toFixed(3),
-              c: item.substring(item.indexOf("]") + 1, item.length)
-            });
+function createLrc (lyric) {
+    medisArray = new Array();
+    lineno = 0;
+    var lyrics = lyric.split("\n");
+
+    $.each(lyrics, function (i, item) {
+        var t = item.substring(item.indexOf("[") + 1, item.indexOf("]"));
+        medisArray.push({
+          t: (t.split(":")[0] * 60 + parseFloat(t.split(":")[1])).toFixed(3),
+          c: item.substring(item.indexOf("]") + 1, item.length)
         });
-        var lyricDom = $("#lyric_txt");
-        lyricDom.empty();
-        lyricDom.css('transform', 'translateY(0)')
-        // 遍历medisArray，并且生成p标签，将数组内的文字放入p标签
-        $.each(medisArray, function (i, item) {
-            var p = $('<p t="'+item.t+'" ></p>');
-            p.html(item.c);
-            lyricDom.append(p);
-        });
+    });
+    var lyricDom = $("#lyric_txt");
+    lyricDom.empty();
+    lyricDom.css('transform', 'translateY(0)')
+    $.each(medisArray, function (i, item) {
+        var p = $('<p lrcIndex="'+i+'" ></p>');
+        p.html(item.c);
+        lyricDom.append(p);
+    });
+}
+
+var lineno = 0;
+function lineHeight(){
+    var $lyr = $("#lyric_txt");
+    // 高亮显示
+    $lyr.find('p').removeClass('active');
+    var nowline = $lyr.find("p").get(lineno);
+    $(nowline).addClass("active");  
+
+    // 实现文字滚动
+    if (lineno > 3) {
+        let transformPx = (lineno - 3) * 44;
+        $lyr.css('transform', 'translateY(-'+transformPx+'px)');
     }
+    
+}
+
+function calLineno(currentTime) {
+
+    let t = currentTime.toFixed(3);
+    if (t >= parseFloat(medisArray[lineno].t) && t < parseFloat(medisArray[lineno+1].t)) {
+        lineno = lineno;
+    }
+
+    $.each(medisArray, function (i, item) {
+        if (t < parseFloat(item.t)) {
+            lineno = i-1;
+            return;
+        }
+    });
+}
+

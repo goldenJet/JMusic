@@ -28,15 +28,11 @@ body {
     margin: -4px auto;
     z-index: 10;
     overflow: hidden;
-    line-height: 40px;
+    line-height: 30px;
     text-align: center;
     font-size: 14px;
     color: #fff;
     margin-top: 20px;
-}
-
-#lyric p.played {
-    color: aquamarine;
 }
 
 #lyric p.active {
