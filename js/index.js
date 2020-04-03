@@ -234,14 +234,12 @@ $(function () {
             },
             success: function(data) {
                 if (data.code == 200) {
-                    console.log(data['lrc']['lyric'])
+                    createLrc(data['lrc']['lyric']);
                 }
             }
         });
     }
-    function handleCallback1(res) {
-        console.log(JSON.stringify(res))
-    }
+
     function changeSound(e, offFlag) {
         let height = Number($('#musicVolumn .aplayer-volume-bar').css('height').replace('px',''));
         let top = $('.aplayer-volume-bar').offset().top;
@@ -319,3 +317,26 @@ $(function () {
     }
     initPlayer();
 });
+
+function createLrc (lyric) {
+        medisArray = new Array();
+        console.log(lyric)
+        var lyrics = lyric.split("\n");    // 用换行符拆分获取到的歌词
+
+        $.each(lyrics, function (i, item) {    // 遍历medises，并且将时间和文字拆分开，并push进自己定义的数组，形成一个对象数组
+            var t = item.substring(item.indexOf("[") + 1, item.indexOf("]"));
+            medisArray.push({
+              t: (t.split(":")[0] * 60 + parseFloat(t.split(":")[1])).toFixed(3),
+              c: item.substring(item.indexOf("]") + 1, item.length)
+            });
+        });
+        var lyricDom = $("#lyric_txt");
+        lyricDom.empty();
+        lyricDom.css('transform', 'translateY(0)')
+        // 遍历medisArray，并且生成p标签，将数组内的文字放入p标签
+        $.each(medisArray, function (i, item) {
+            var p = $('<p t="'+item.t+'" ></p>');
+            p.html(item.c);
+            lyricDom.append(p);
+        });
+    }
