@@ -224,20 +224,25 @@ $(function () {
     function getLrc(url) {
         let id = url.split("id=")[1].split(".")[0];
         let lrcUrl = 'http://jmusic.jetchen.cn/api/song/lyric?os=pc&lv=-1&kv=-1&tv=-1&id=' + id;
-        $.ajax({
-            url: lrcUrl,
-            type: 'get',
-            dataType: 'jsonp',  // 请求方式为jsonp
-            crossDomain: true,
-            xhrFields: {
-                withCredentials: true    // 前端设置是否带cookie
-            },
-            success: function(data) {
-                if (data.code == 200) {
-                    createLrc(data['lrc']['lyric']);
-                }
+        // $.ajax({
+        //     url: lrcUrl,
+        //     type: 'get',
+        //     dataType: 'jsonp',  // 请求方式为jsonp
+        //     crossDomain: true,
+        //     xhrFields: {
+        //         withCredentials: true    // 前端设置是否带cookie
+        //     },
+        //     success: function(data) {
+        //         if (data.code == 200) {
+        //             createLrc(data['lrc']['lyric']);
+        //         }
+        //     }
+        // });
+        $.getJSON(lrcUrl, function(json, textStatus) {
+            if (json.code == 200) {
+                createLrc(json['lrc']['lyric']);
             }
-        });
+        })
     }
 
     function changeSound(e, offFlag) {
