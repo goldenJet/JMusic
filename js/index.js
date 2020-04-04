@@ -169,11 +169,7 @@ $(function () {
     }
 
     function selectTrack2(flag) {
-        /*
-        * 歌单详细见
-        * https://api.uomg.com/doc-rand.music.html
-        */
-        $.getJSON('https://api.uomg.com/api/rand.music?', {
+        $.getJSON('http://jmusic.jetchen.cn/api/rand.music?', {
             sort: '热歌榜'
             ,format: 'json'
         }, function(json, textStatus) {
