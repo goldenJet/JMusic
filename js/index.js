@@ -318,7 +318,7 @@ function createLrc (lyric) {
     $.each(lyrics, function (i, item) {
         var tStr = item.substring(item.indexOf("[") + 1, item.indexOf("]"));
         if (tStr) {
-            let t = (t.split(":")[0] * 60 + parseFloat(t.split(":")[1])).toFixed(3);
+            let t = (tStr.split(":")[0] * 60 + parseFloat(tStr.split(":")[1])).toFixed(3);
             let c = item.substring(item.indexOf("]") + 1, item.length);
             if (t & c) {
                 medisArray.push({
