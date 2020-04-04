@@ -353,9 +353,9 @@ function lineHeight(){
 }
 
 function calLineno(currentTime) {
-
+    if (medisArray.length < 1) return;
     let t = currentTime.toFixed(3);
-    if (t >= parseFloat(medisArray[lineno].t) && t < parseFloat(medisArray[lineno+1].t)) {
+    if (lineno >= 0 && t >= parseFloat(medisArray[lineno].t) && t < parseFloat(medisArray[lineno+1].t)) {
         lineno = lineno;
     }
 
