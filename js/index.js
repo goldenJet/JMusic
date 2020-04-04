@@ -316,11 +316,17 @@ function createLrc (lyric) {
     var lyrics = lyric.split("\n");
 
     $.each(lyrics, function (i, item) {
-        var t = item.substring(item.indexOf("[") + 1, item.indexOf("]"));
-        medisArray.push({
-          t: (t.split(":")[0] * 60 + parseFloat(t.split(":")[1])).toFixed(3),
-          c: item.substring(item.indexOf("]") + 1, item.length)
-        });
+        var tStr = item.substring(item.indexOf("[") + 1, item.indexOf("]"));
+        if (tStr) {
+            let t = (t.split(":")[0] * 60 + parseFloat(t.split(":")[1])).toFixed(3);
+            let c = item.substring(item.indexOf("]") + 1, item.length);
+            if (t & c) {
+                medisArray.push({
+                    t: t,
+                    c: c
+                });
+            }
+        }
     });
     var lyricDom = $("#lyric_txt");
     lyricDom.empty();
