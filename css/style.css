@@ -35,6 +35,15 @@ body {
     margin-top: 20px;
 }
 
+#beian {
+    bottom: 0;
+    position: absolute;
+    right: 0;
+    left: 0;
+    z-index: 100;
+    line-height: 30px;
+}
+
 #lyric p.active {
     color: aquamarine;
     font-size: 20px;
